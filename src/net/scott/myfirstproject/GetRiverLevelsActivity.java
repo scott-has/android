@@ -38,22 +38,6 @@ public class GetRiverLevelsActivity extends Activity{
         new DownloadWebpageText().execute(stringUrl);
     }
 	
-//    public void getRiverDataFromNetwork(){
-//        // Gets the URL from the UI's text field.
-//        String stringUrl = "http://waterservices.usgs.gov/nwis/iv/?format=waterml,1.1&stateCd=wa&parameterCd=00060,00065&siteType=ST";
-//        ConnectivityManager connMgr = (ConnectivityManager) 
-//            getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-//        if (networkInfo != null && networkInfo.isConnected()) {
-//            new DownloadWebpageText().execute(stringUrl);
-//        } else {
-//        	
-//            textView.setText("No network connection available.");
-//        }
-//    }
-    
-   
-	
 	//////////////////////////////////////////
 	private class DownloadWebpageText extends AsyncTask<String, Void, String> {
         @Override
@@ -81,80 +65,17 @@ public class GetRiverLevelsActivity extends Activity{
 //				// TODO Auto-generated catch block
 //				result = e.getMessage();
 //			}
+//            textView.setText(xmlData);
+        	
+        	
         	setContentView(R.layout.activity_get_river_levels);//setContentView(myWebView);
         	WebView myWebView = (WebView) findViewById(R.id.webview); //new WebView(this);
-            //textView.setText("getting river data....");
-           //setContentView(textView);
-          
-            // Displays the HTML string in the UI via a WebView
-           // WebView myWebView = (WebView) findViewById(R.id.webview);
             myWebView.loadData(xmlData, "text/html", null);
-            //textView.setText(xmlData);
+
        }
     }
     ////////////////////////////
     
-    private String downloadUrl(String myurl) throws IOException {
-        InputStream is = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
-        int len = 15000;
-            
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            // Starts the query
-            System.out.println("starting connection");
-            conn.connect();
-            int response = conn.getResponseCode();
-            System.out.println( "The response is: " + response);
-            Log.d("debug", "The response is: " + response);
-            is = conn.getInputStream();
-           // String contentAsString = ReadInputStream(is); //readIt(is, len);
-            String contentAsString = readIt(is, len);
-            System.out.println(contentAsString);
-            return contentAsString;
-            
-        // Makes sure that the InputStream is closed after the app is
-        // finished using it.
-        } finally {
-            if (is != null) {
-                is.close();
-            } 
-        }
-    }
- public String parseData(String xmlData) throws XmlPullParserException, IOException
-     {
-     String result = "";
-     String newLine = "" ;
-	 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-         factory.setNamespaceAware(true);
-         XmlPullParser xpp = factory.newPullParser();
-         Boolean printText = false;
-         xpp.setInput( new StringReader ( xmlData) );
-         int eventType = xpp.getEventType();
-         while (eventType != XmlPullParser.END_DOCUMENT) {
-           if(eventType == XmlPullParser.START_TAG &&  (xpp.getName().equals("siteName") || xpp.getName().equals("value"))) {
-              //result += ("Start tag "+ xpp.getName());
-              printText = true;
-              if (xpp.getName().equals("value")){
-            	  newLine = "\n"; 
-              }
-//          } else if(eventType == XmlPullParser.END_TAG &&  xpp.getName().equals("siteName")) {
-//        	  result += ("End tag "+xpp.getName());
-          } else if(eventType == XmlPullParser.TEXT && printText == true) {
-        	  result += (xpp.getText()+newLine);
-        	  printText = false;
-        	  newLine =" ";
-          }
-          eventType = xpp.next();
-         }
-         return result;
-        }
 
 	// Reads an InputStream and converts it to a String.
     public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
@@ -198,7 +119,7 @@ public class GetRiverLevelsActivity extends Activity{
                 continue;
             }
             String name = parser.getName();
-            // Starts by looking for the entry tag
+            // Starts by looking for the correct tag
             if (name.equals("ns1:timeSeries")) {
                 Entry entry = readEntry(parser);
                 if(entry != null) entries.add(entry);
@@ -332,17 +253,10 @@ public class GetRiverLevelsActivity extends Activity{
         List<Entry> entries = null;
         String name = null;
         String flow = null;
-        String summary = null;
-
-            
+        String summary = null;            
         StringBuilder htmlString = new StringBuilder();
         
-        
-
-
         htmlString.append("<table border='1'>  <tr> <th>River</th> <th>Flow in CFS</th>  </tr>");
-//        htmlString.append("<em>" + getResources().getString(R.string.updated) + " " + 
-//                formatter.format(rightNow.getTime()) + "</em>");
             
         try {
             stream = downloadXMLUrl(urlString);        
@@ -354,11 +268,7 @@ public class GetRiverLevelsActivity extends Activity{
                 stream.close();
             } 
          }
-        
-//      <tr>
-//      <td>row 1, cell 1</td>
-//      <td>row 1, cell 2</td>
-//      </tr>
+
         for (Entry entry : entries) {       
             htmlString.append("<tr><td>" + entry.name + "</td>" );
             htmlString.append("<td>" + entry.flow + "</td></tr>" );
@@ -378,6 +288,71 @@ public class GetRiverLevelsActivity extends Activity{
         conn.connect();
         return conn.getInputStream();      
     }
+    
+    //////////////////////////
+    //
+    // Some old methods that I was playing with
+    
+//  private String downloadUrl(String myurl) throws IOException {
+//  InputStream is = null;
+//  // Only display the first 500 characters of the retrieved
+//  // web page content.
+//  int len = 15000;
+//      
+//  try {
+//      URL url = new URL(myurl);
+//      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//      conn.setReadTimeout(10000 /* milliseconds */);
+//      conn.setConnectTimeout(15000 /* milliseconds */);
+//      conn.setRequestMethod("GET");
+//      conn.setDoInput(true);
+//      // Starts the query
+//      System.out.println("starting connection");
+//      conn.connect();
+//      int response = conn.getResponseCode();
+//      System.out.println( "The response is: " + response);
+//      Log.d("debug", "The response is: " + response);
+//      is = conn.getInputStream();
+//     // String contentAsString = ReadInputStream(is); //readIt(is, len);
+//      String contentAsString = readIt(is, len);
+//      System.out.println(contentAsString);
+//      return contentAsString;
+//      
+//  // Makes sure that the InputStream is closed after the app is
+//  // finished using it.
+//  } finally {
+//      if (is != null) {
+//          is.close();
+//      } 
+//  }
+//}
+//public String parseData(String xmlData) throws XmlPullParserException, IOException
+//{
+//String result = "";
+//String newLine = "" ;
+//XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+//   factory.setNamespaceAware(true);
+//   XmlPullParser xpp = factory.newPullParser();
+//   Boolean printText = false;
+//   xpp.setInput( new StringReader ( xmlData) );
+//   int eventType = xpp.getEventType();
+//   while (eventType != XmlPullParser.END_DOCUMENT) {
+//     if(eventType == XmlPullParser.START_TAG &&  (xpp.getName().equals("siteName") || xpp.getName().equals("value"))) {
+//        //result += ("Start tag "+ xpp.getName());
+//        printText = true;
+//        if (xpp.getName().equals("value")){
+//      	  newLine = "\n"; 
+//        }
+//    } else if(eventType == XmlPullParser.TEXT && printText == true) {
+//  	  result += (xpp.getText()+newLine);
+//  	  printText = false;
+//  	  newLine =" ";
+//    }
+//    eventType = xpp.next();
+//   }
+//   return result;
+//  }
+
 
 
 }
