@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">My First Project</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_data">Get River Levels</string>
+    <string name="title_activity_display_message">Message Display</string>
+    <string name="old_value">old_value</string>
+    <string name="title_activity_get_river_levels">GetRiverLevelsActivity</string>
+
+</resources>
