@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Xml;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 public class GetRiverLevelsActivity extends Activity{
@@ -80,7 +81,15 @@ public class GetRiverLevelsActivity extends Activity{
 //				// TODO Auto-generated catch block
 //				result = e.getMessage();
 //			}
-            textView.setText(xmlData);
+        	setContentView(R.layout.activity_get_river_levels);//setContentView(myWebView);
+        	WebView myWebView = (WebView) findViewById(R.id.webview); //new WebView(this);
+            //textView.setText("getting river data....");
+           //setContentView(textView);
+          
+            // Displays the HTML string in the UI via a WebView
+           // WebView myWebView = (WebView) findViewById(R.id.webview);
+            myWebView.loadData(xmlData, "text/html", null);
+            //textView.setText(xmlData);
        }
     }
     ////////////////////////////
@@ -327,7 +336,11 @@ public class GetRiverLevelsActivity extends Activity{
 
             
         StringBuilder htmlString = new StringBuilder();
-//        htmlString.append("<h3>" + getResources().getString(R.string.page_title) + "</h3>");
+        
+        
+
+
+        htmlString.append("<table border='1'>  <tr> <th>River 1</th> <th>Flow in CFS</th>  </tr>");
 //        htmlString.append("<em>" + getResources().getString(R.string.updated) + " " + 
 //                formatter.format(rightNow.getTime()) + "</em>");
             
@@ -342,16 +355,15 @@ public class GetRiverLevelsActivity extends Activity{
             } 
          }
         
-        // StackOverflowXmlParser returns a List (called "entries") of Entry objects.
-        // Each Entry object represents a single post in the XML feed.
-        // This section processes the entries list to combine each entry with HTML markup.
-        // Each entry is displayed in the UI as a link that optionally includes
-        // a text summary.
+//      <tr>
+//      <td>row 1, cell 1</td>
+//      <td>row 1, cell 2</td>
+//      </tr>
         for (Entry entry : entries) {       
-            htmlString.append(entry.name);
-            htmlString.append("\t" + entry.flow + "\n");
-
+            htmlString.append("<tr><td>" + entry.name + "</td>" );
+            htmlString.append("<td>" + entry.flow + "</td></tr>" );
         }
+        htmlString.append("</table>");
         return htmlString.toString();
     }
     
