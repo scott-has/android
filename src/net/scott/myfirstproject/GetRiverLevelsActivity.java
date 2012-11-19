@@ -340,7 +340,7 @@ public class GetRiverLevelsActivity extends Activity{
         
 
 
-        htmlString.append("<table border='1'>  <tr> <th>River 1</th> <th>Flow in CFS</th>  </tr>");
+        htmlString.append("<table border='1'>  <tr> <th>River</th> <th>Flow in CFS</th>  </tr>");
 //        htmlString.append("<em>" + getResources().getString(R.string.updated) + " " + 
 //                formatter.format(rightNow.getTime()) + "</em>");
             
