@@ -70,7 +70,8 @@ public class GetRiverLevelsActivity extends Activity{
         	
         	setContentView(R.layout.activity_get_river_levels);//setContentView(myWebView);
         	WebView myWebView = (WebView) findViewById(R.id.webview); //new WebView(this);
-            myWebView.loadData(xmlData, "text/html", null);
+            myWebView.setVerticalScrollBarEnabled(true);
+        	myWebView.loadData(xmlData, "text/html", null);
 
        }
     }
@@ -129,7 +130,7 @@ public class GetRiverLevelsActivity extends Activity{
         }  
         return entries;
     }
-    
+  ////////////  
     public static class Entry {
         public final String name;
         public final String flow;
@@ -139,6 +140,9 @@ public class GetRiverLevelsActivity extends Activity{
             this.flow = flow;
         }
     }
+    //////
+    
+    
     private Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "ns1:timeSeries");
         String name = null;
